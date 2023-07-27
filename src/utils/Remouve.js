@@ -62,7 +62,7 @@ export default function Remouve(Widths,Centers,L){
       //console.log("++++++++++++++");
        var cnst = this.Getconstraint();
         var listsorted=this.position;//.sort(function(a, b){return a-b});
-         
+        
          Array.prototype.max = function() {
             return Math.max.apply(null, this);
             };
@@ -79,20 +79,20 @@ export default function Remouve(Widths,Centers,L){
             var  newp=null;
             if ((index==0)||(index==(this.position.length-1))){
             fun= this.constThree(p,index,(this.position.length-1),this.surface[index]);
-           //console.log("fn : "+fun);  
+           console.log("fn : "+fun);  
             }
              else{
                
-             // //console.log("  p : "+p);
+            console.log("  p : "+p);
              newp= this.claculatenewP(p,cnst,pmin,pmax);
-           //   //console.log("  newp : "+newp); 
+           console.log("  newp : "+newp); 
                 this.newPosition.push(newp);
                 var surfacebefor=0;
                 for (var ind = 0; ind <= index; ind++) {
                     surfacebefor= surfacebefor+(this.surface[ind]*2);           
                 }
                 fun= newp - this.surface[index]+surfacebefor;
-                //   //console.log("  fun : "+fun);
+                console.log("  fun : "+fun);
                 
             }
             listf.push(fun);

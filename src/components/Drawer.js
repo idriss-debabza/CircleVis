@@ -45,6 +45,8 @@ import {
 } from '@material-ui/core';
 // import   WriteJsonFile   from 'write-json-file'
 import { mergeData, spliteData, parseFileData} from '../utils/randomizeData'
+import reorderData from "../utils/reorder"
+
 import MenuIcon from '@material-ui/icons/Menu';
 
 import PieContainer from './PieContainer';
@@ -59,11 +61,17 @@ import CircleEngleText from './CircleEngleText'
 import CirclerAroundText from './CirclerAroundText'
 import { useDataContext } from '../utils/dataContext'
 import randomizeData from "../utils/randomizeData"
+
 import SpliteModal from './SpliteModal';
 import FontSizeSlider from './FontSizeSlider'
 import exportFromJSON from 'export-from-json'
 import { engleText } from '../utils/functions';
-import { removeOverlaps } from '../utils/removeOverlaps'
+import { removeOverlaps, PFS , PFSy } from '../utils/removeOverlaps'
+import {Prism} from '../utils/prism'
+import {Vpsc} from '../utils/vpsc'
+import {Scaling} from '../utils/scaling'
+import { horizontalScan} from '../utils/pfsp'
+import { ViewListRounded } from '@material-ui/icons';
 
 const drawerWidth = 240;
 
@@ -194,10 +202,15 @@ export default function PersistentDrawerLeft() {
     const [openModal, setOpenModal] = React.useState(false);
     const [openModalSplite, setOpenModalSplite] = React.useState(false);
     const [openZoomType, setOpenZoomType] = React.useState(false)
+    const [openAlgorithmType , setOpenAlgorithmType ] = React.useState (true )
+    const [openPFSType , setOpenPFSType ] = React.useState (true )
     const [ZoomType, setZoomType] = React.useState("SEMENTIC")
     const { updateFontSize } = useFontSizeContext()
     const randData = () => {
         addData(randomizeData())
+    }
+    const reoData = () => {
+        addData(reorderData(data))
     }
 
     const resetEveryThings = () => {
@@ -228,6 +241,13 @@ export default function PersistentDrawerLeft() {
         setOpenZoomType(!openZoomType)
     }
 
+    const handleOpenAlgorithmType = () => {
+        setOpenAlgorithmType(!openAlgorithmType)
+    }
+    
+    const handleOpenPFSType = () => {
+        setOpenPFSType(!openPFSType)
+    }
     const handleDrawerOpen = () => {
         setOpen(!open);
     };
@@ -301,6 +321,42 @@ export default function PersistentDrawerLeft() {
     const removeOverLaps = () => {
         removeOverlaps(labelSvg)
     }
+    
+    const [doPFS, setDoPFS] = React.useState(false);
+    const PFSXY = () => {
+        PFS(algo1Svg);
+        PFS(algo2Svg)
+    }
+    const [doPFSY , setDoPFSY] = React.useState(false);
+    const PFSY = () => {
+      
+            PFSy(labelSvg)
+            PFSy(algo1Svg);
+            PFSy(algo2Svg);
+       
+    }
+    const [doPFSP, setDoPFSP] = React.useState(false);
+    const PFSP = () => {
+        horizontalScan(algo2Svg);
+       
+    }
+    const [doPRISM, setDoPRISM] = React.useState(false);
+    const PRISM = () => {
+        Prism(algo1Svg);
+        Prism(algo2Svg)
+    }
+
+    const [doVPSC, setDoVPSC] = React.useState(false);
+    const VPSC = () => {
+        Vpsc(algo1Svg);
+        Vpsc(algo2Svg)
+    }
+    const [doSCALING, setDoSCALING] = React.useState(false);
+    const SCALING = () => {
+        Scaling(algo1Svg);
+        Scaling(algo2Svg)
+    }
+
     const [labelSvg, setLabelSvg] = React.useState(null)
 
     const [algo1Svg, setAlgo1Svg] = React.useState(null)
@@ -385,13 +441,58 @@ export default function PersistentDrawerLeft() {
                             </RadioGroup>
                         </FormControl>
                     </Collapse>
+               
+                    
+                    
+                  
+                    <ListItem button={true} key={'PFS Type'} onClick={handleOpenPFSType}>
+                        <ListItemIcon><Icon><img src={OverlapLogo}></img></Icon></ListItemIcon>
+                        <ListItemText primary={'Remove Overlap'} />
+                        {openPFSType ? <ExpandLess /> : <ExpandMore />}
+                    </ListItem>
+                    <Collapse in={openPFSType} timeout="auto" unmountOnExit>
                     <ListItem button={true} key={'Remove overlaps'} onClick={removeOverLaps}>
                         <ListItemIcon><Icon><img src={OverlapLogo}></img></Icon></ListItemIcon>
-                        <ListItemText primary={'Remove overlaps'} />
+                        <ListItemText primary={'1D Function'} />
                     </ListItem>
+
+
+                      <ListItem button={true} key={'PFS'} onClick={PFSXY}>
+                        <ListItemIcon><Icon><img src={OverlapLogo}></img></Icon></ListItemIcon>
+                        <ListItemText primary={'PFS'} />
+                    </ListItem>
+                    <ListItem button={true} key={'PFS verical'} onClick={PFSY}>
+                        <ListItemIcon><Icon><img src={OverlapLogo}></img></Icon></ListItemIcon>
+                        <ListItemText primary={'PFS vertical'} />
+                    </ListItem>
+                    <ListItem button={true} key={'PFSP'} onClick={PFSP}>
+                        <ListItemIcon><Icon><img src={OverlapLogo}></img></Icon></ListItemIcon>
+                        <ListItemText primary={'PFSP'} />
+                    </ListItem>
+                    
+                    <ListItem button={true} key={'VPSC'} onClick={VPSC}>
+                        <ListItemIcon><Icon><img src={OverlapLogo}></img></Icon></ListItemIcon>
+                        <ListItemText primary={'VPSC'} />
+                    </ListItem>   
+                    <ListItem button={true} key={'PRISM'} onClick={PRISM}>
+                        <ListItemIcon><Icon><img src={OverlapLogo}></img></Icon></ListItemIcon>
+                        <ListItemText primary={'PRISM'} /> 
+                    </ListItem>
+
+                    <ListItem button={true} key={'Scaling'} onClick={SCALING}>
+                        <ListItemIcon><Icon><img src={OverlapLogo}></img></Icon></ListItemIcon>
+                        <ListItemText primary={'Scaling'} /> 
+                    </ListItem>
+                    </Collapse>
+                    
+                   
                     <ListItem button={true} key={'Randomize'} onClick={randData}>
                         <ListItemIcon><CasinoOutlinedIcon /></ListItemIcon>
                         <ListItemText primary={'Randomize'} />
+                    </ListItem>
+                    <ListItem button={true} key={'Reorder'} onClick={reoData}>
+                        <ListItemIcon><ViewListRounded /></ListItemIcon>
+                        <ListItemText primary={'Reorder'} />
                     </ListItem>
                 </List>
                 <Divider />
@@ -407,8 +508,8 @@ export default function PersistentDrawerLeft() {
                 </List>
                 <Divider />
                 <List>
-                    <DeletItemsModal />
-                    <InsertElementModal />
+                    <DeletItemsModal  />
+                    <InsertElementModal  />
                 </List>
                 <Divider />
                 <List>
@@ -471,7 +572,7 @@ export default function PersistentDrawerLeft() {
                   
                     <div className={classes.content}>
                         <PieContainer className={classes.content} svg={algo1Svg} title={"A3_Ln"} name={"Linear Arrangement"}  >
-                            <CircleAlgo1 setSvg={setAlgo1Svg} doRemoveOverlap={doRemoveOverLaps} set={setDoRemoveOverLaps} />
+                            <CircleAlgo1 setSvg={setAlgo1Svg} doRemoveOverlap={doRemoveOverLaps} set={setDoPFS} />
                         </PieContainer>
                     </div>
                     <div className={classes.content}>

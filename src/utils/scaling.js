@@ -20,67 +20,9 @@ const getLeftRightSide = function (texts, listEngls) {
     return [left, right];
 }
 
-const changeCoordiantion = function (texts, newPos) {
-    //console.log("texts, newpos", texts, newPos);
-    for (let index = 0; index < texts.length; index++) {
-        const element = texts[index];
 
-        var y1 = newPos[index][1];
-        d3.select(element).attr("y", y1);
-   
 
-    }
-
-}
-
-export const removeOverlaps  = (svg)=> {
-    let detectOverlap = new OverlapText();
-    let centers = [];
-  
-    
-    svg.select(".slices").selectAll("path.slice").each(function (d) {
-        centers.push({ 'middle': midAngle(d) });
-    });
-  
-    let isoverlaps = detectOverlap.GetOverlap(svg.selectAll("text")._groups[0]);
- 
-   console.log('is overlap ' + isoverlaps)
-    if(isoverlaps){
-        var LRText =  getLeftRightSide(svg.selectAll("text")._groups[0], centers);
-   
-        var lefts = LRText[0];
-        var rights = LRText[1];
-        detectOverlap.svgc = svg;
-        //console.log("left and right sides:", lefts, rights);
-        var isoveSides = detectOverlap.GetOverlap(lefts);
-        //console.log("left",isoveSides);
-        if(isoveSides){
-            var getOverlap = detectOverlap.GenerateDataForm(lefts,0);
-             changeCoordiantion(lefts,getOverlap);
-        }
-         isoveSides = detectOverlap.GetOverlap(rights);
-        //console.log("rights",isoveSides);
-        if(isoveSides){
-        var getOverlap2 = detectOverlap.GenerateDataForm(rights,1);
-         changeCoordiantion(rights,getOverlap2);
-        }
-    }
-}
-    
-const changePositionpfs = function (texts, newPos) {
-    //console.log("texts, newpos", texts, newPos);
-    for (let index = 0; index < texts.length; index++) {
-        const element = texts[index];
-
-        var y1 = newPos[index][1];
-        d3.select(element).attr("y", y1);
-   
-
-    }
-
-}
-
-export const PFS = function(svg){
+export const PRISM = function(svg){
     
        let overlappfs = new OverlapText();
     var texts = svg.selectAll("text")._groups[0];
@@ -118,16 +60,17 @@ console.log('cx,cy', cx,cy);
 
             
                     var forcepfsy =  overlappfs.calculateforcey(text1,textcenter1,text2,textcenter2);
-                    console.log('force pfsy ', forcepfsy, texts[index],texts[index2] );
-
+                  
       
-                   console.log ('popo',+texts[index2].getAttribute("y"),+texts[index2].getAttribute("x") )
-                    console.log('force',forcepfsy , forcepfsx,'fedhet');
+                
                     
-    
-                    
+                    if (index2 == texts.length ){
+                        d3.select(texts[index]).attr("y", +texts[index].getAttribute("y")  - forcepfsy);
+                        d3.select(texts[index]).attr("x", +texts[index].getAttribute("x")  - forcepfsx);}
+                    else {
                         d3.select(texts[index2]).attr("y", +texts[index2].getAttribute("y")  - forcepfsy);
                         d3.select(texts[index2]).attr("x", +texts[index2].getAttribute("x")  - forcepfsx);
+                    }
                     
   // console.log ('force ' , texts[index],texts[index2])
 
@@ -144,7 +87,7 @@ console.log('cx,cy', cx,cy);
 //index = 0 ;index2=0;}
 }}
 
-export const PFSy = function(svg) {
+export const Scaling = function(svg) {
     // get left side and right side
     console.log('bdina');
        let overlappfs = new OverlapText();
@@ -179,11 +122,9 @@ console.log('cx,cy', cx,cy);
                 if ((index != index2) && ( overlappfs.IsOverlapPFS(text1,textcenter1,text2,textcenter2)) ) {
                        
                     var forcepfsy =  overlappfs.calculateforcey(text1,textcenter1,text2,textcenter2);
-                    console.log('force pfsy ', forcepfsy, texts[index],texts[index2] );
-
+               
       
-                   console.log ('popo',+texts[index2].getAttribute("y") )
-                    console.log('force',forcepfsy ,'fedhet');
+                  
                     d3.select(texts[index2]).attr("y", +texts[index2].getAttribute("y") - forcepfsy);
                   
                     
@@ -203,44 +144,5 @@ console.log('cx,cy', cx,cy);
 //index = 0 ;index2=0;}
 }}
 
-/*
-    index = 0;
-    index2 = 0 ;
-    if (overlappfs.TestOverlapPFS){
-
-        while ((index < textAres.length) ){
-            text1 = textAres[index];
-            textcenter1 = textsCenters[index];
-            while ((index2 < textAres.length) ) {
-                text2 = textAres[index2];
-                textcenter2 = textsCenters[index2];
-                
-                if (index != index2 &&  overlappfs.IsOverlapPFS(text1,textcenter1,text2,textcenter2)) {
-                   var forcepfsy =  overlappfs.calculateforcey(text1,textcenter1,text2,textcenter2);
-                    console.log('force pfsy ', forcepfsy, texts[index],texts[index2] );
-                    
-                }
-            index2++;
-        }
-        index++;
-    }
-    
-   /* while ( i < textAres.length){
-        var k = i ;
-        for (let index = i ; index < textAres.length ; index++){
-            if (textAres[index] == textAres[i] ){k = index}
-        }
-        var force = 0 ;
-        if (  textAres[i][0] > textAres[l][0] ){
-            force  = calculateforcex(i,l)
-        }
-        for (j = i ; j < k ; j++){
-            textAres[j][0] = textAres[j][0] + force ; 
-        }
-        l = i;
-        i = k + 1
-    }*//*
-    }*/
-   
 
 

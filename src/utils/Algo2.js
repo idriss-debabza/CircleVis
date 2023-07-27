@@ -151,7 +151,7 @@ Algo2.prototype.DrawRectangle = function (rects, titArc, TitaNorm) {
         var newxx;
         newxx = newx - (w / 2);
         var newy = cor[1] - (h / 2);
-        //console.log("fon size", font_size);
+       // console.log("salam");
 
       /*  this.svg.select(".labels")
             .selectAll("text")

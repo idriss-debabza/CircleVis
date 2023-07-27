@@ -1,14 +1,14 @@
 import * as d3 from 'd3';
 
 
-export default function randomizeData(size = 12) {
+export  function randomizeData(size = 15) {
     let color = d3.scaleLinear()
         .domain([0, size])
         .range(["dodgerblue", "tomato"])
     //  .interpolate(d3.interpolateHcl);
     let result = []
     for (let i = 0; i < size; i++) {
-        let text = randomText(getRandomInt(5, 10))
+        let text = randomText(getRandomInt(1, 10))
         result[i] = {
             id: i,
             label: text,
@@ -152,23 +152,18 @@ export function spliteData(data, splitedItems) {
     return newData
 
 }
-export function reorderData(size= 25) {
-    let color = d3.scaleLinear()
-    .domain([0, size])
-    .range(["dodgerblue", "tomato"])
-//  .interpolate(d3.interpolateHcl);
-let result = []
-for (let i = 0; i < size; i++) {
-    let text = randomText(getRandomInt(1, 10))
-    result[i] = {
-        id: i,
-        label: text,
-        value: Math.random(),
-        fontSize : 0 ,
-        color: color(i), // change this to see better colors ,
-        children: null
+export  default function reorderData(array) {
+    const sorted = array.sort((a, b) => a.value - b.value);
+    const mid = Math.ceil(sorted.length / 2);
+    const left = sorted.slice(0, mid);
+    const right = sorted.slice(mid);
+    const zipped = [];
+  
+    for (let i = 0; i < left.length || i < right.length; i++) {
+      if (left[i]) zipped.push(left[i]);
+      if (right[i]) zipped.push(right[i]);
     }
-
-}
-return normilizeData(result)
+  
+    console.log(zipped)
+return normilizeData(zipped)
   }

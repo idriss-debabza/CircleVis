@@ -1,14 +1,7 @@
 import React from 'react'
 import {
     Fab,
-    DialogTitle,
-    DialogActions,
-    Button,
-    Dialog,
-    Paper,
     TextField,
-    DialogContent,
-    DialogContentText
 } from '@material-ui/core';
 import FormatColorFillRoundedIcon from '@material-ui/icons/FormatColorFillRounded';
 import { makeStyles } from '@material-ui/core/styles';
@@ -33,52 +26,72 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function InserElementInputs() {
-    const [color, setColor] = React.useState('#eeeeee')
-    const [label, setLabel] = React.useState('')
-    const [value, setValue] = React.useState('')
+    const [inputs, setInputs] = React.useState([{color: '#eeeeee',label: '',value: '',},]);
+    
+    const handleAddInput = () => {
+        setInputs([...inputs,{color: '#eeeeee',label: '',value: '',},]);
+    };
+    
+    const handleInputChange = (index, field, value) => {
+        setInputs(
+            inputs.map((input, i) => {
+                if (i === index) {
+                    return {
+                        ...input,
+                        [field]: value,
+                    };
+                }
+                return input;
+            })
+        );
+    };
+    
+    const handleColorChange = (index, event) => {
+        handleInputChange(index, 'color', event.target.value);
+    };
 
-    const handleColorChange = (event) => {
-        setColor(event.target.value)
-    }
     const classes = useStyles();
     return (
-        <div className={classes.inputContainer}>
-            <TextField
-                onChange={(event) => {
-                    setLabel(event.target.value)
-                }}
-                value={label}
-                autoFocus
-                margin="dense"
-                id="label"
-                label="label"
-                type="text"
-                required
-            />
+        <div>
+            {inputs.map((input, index) => (
+                <div key={index} className={classes.inputContainer}>
+                    <TextField
+                        onChange={(event) => {
+                            handleInputChange(index, 'label', event.target.value);
+                        }}
+                        value={input.label}
+                        autoFocus
+                        margin="dense"
+                        id={`label-${index}`}
+                        label="label"
+                        type="text"
+                        required
+                    />
 
-            <TextField
-                onChange={(event) => {
-                    setValue(event.target.value)
-                }}
-                value={value}
-                autoFocus
-                margin="dense"
-                id="value"
-                label="value "
-                type="number"
-            />
-            <Fab aria-label="add" onClick={onColorIconClick} style={{ background: color }}>
-                <FormatColorFillRoundedIcon />
-            </Fab>
+                    <TextField
+                        onChange={(event) => {
+                            handleInputChange(index, 'value', event.target.value);
+                        }}
+                        value={input.value}
+                        autoFocus
+                        margin="dense"
+                        id={`value-${index}`}
+                        label="value "
+                        type="number"
+                    />
+                    <Fab aria-label="add" onClick={onColorIconClick} style={{ background: input.color }}>
+                        <FormatColorFillRoundedIcon />
+                    </Fab>
 
-            <input
-                ref={inputColor}
-                className={classes.inputColor}
-                type='color'
-                value={color}
-                onChange={handleColorChange}
-            />
+                    <input
+                        ref={inputColor}
+                        className={classes.inputColor}
+                        type='color'
+                        value={input.color}
+/>
 
-        </div>
-    )
+</div>
+))
 }
+</div>
+    )}

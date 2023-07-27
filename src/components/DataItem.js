@@ -17,6 +17,7 @@ import {
 } from '@material-ui/core';
 import "react-color-palette/lib/css/styles.css";
 import { useDataContext } from '../utils/dataContext'
+import { normilizeData } from '../utils/randomizeData';
 
 const useStyles = makeStyles({
     root: {
@@ -82,7 +83,7 @@ export default function DataItem({ item, index }) {
     const [inputText, setInputText] = React.useState(item.label)
     const [fontSizeDiff, setFontSizeDiff] = React.useState(item.fontSize);
     const inputField = React.useRef(null)
-
+    const { ad } = useDataContext()
 
     React.useEffect(() => {
         setInputText(item.label)
@@ -91,6 +92,7 @@ export default function DataItem({ item, index }) {
     }, [item])
 
     const { addData, data } = useDataContext()
+    
 
 
     const updateContext = (updatedItem) => {
@@ -168,9 +170,50 @@ export default function DataItem({ item, index }) {
             children: item.children
         })
     }
+    const handleDragStart = (e) => {
+          e.dataTransfer.setData("text/plain", index);
+          console.log(data);
+          console.log('drag');
+          
+        };
+  
+      const handleDrop = (e) => {
+          e.preventDefault();
+          
+          const sourceIndex = e.dataTransfer.getData("text/plain");
+          const targetIndex = index;
+          if (sourceIndex != targetIndex){
+          console.log(sourceIndex,targetIndex);
+          console.log(data);
+         const dataCopy = [...data]; // create a copy of the original array
+  // const [draggedItem] = dataCopy.splice(sourceIndex, 1); 
+    const draggedItem = dataCopy[sourceIndex];
+    const targetItem = dataCopy[targetIndex];
+    [dataCopy[sourceIndex], dataCopy[targetIndex]] = [dataCopy[targetIndex], dataCopy[sourceIndex]];
+   dataCopy[sourceIndex].id = parseInt(sourceIndex);
+    dataCopy[targetIndex].id = parseInt(targetIndex);
+
+    console.log(draggedItem) ;console.log(targetItem);console.log(dataCopy);
+    addData(normilizeData(dataCopy))// remove the dragged item
+    //dataCopy.splice(targetIndex, 0, draggedItem); 
+}// insert the dragged item at the target position     
+      // Remove the target item from the target index
+  /*const targetItem = dataCopy[targetIndex + 1];
+  dataCopy.splice(targetIndex + 1, 1);
+  console.log('temporaire') ;console.log(dataCopy);
+
+  // Insert the target item at the original position of the dragged item
+  dataCopy.splice(sourceIndex, 0, targetItem);
+
+    addData(normilizeData(dataCopy))
+    console.log(dataCopy);}
+  
+     // update the state with the new array
+          // do something with sourceIndex and targetIndex*/
+        };    
 
     if (isEditing) return (
-        <Card className={classes.root} style={{ borderLeftColor: color }}>
+        <Card className={classes.root} >
             <CardHeader
                 className={classes.header}
                 action={
@@ -197,8 +240,9 @@ export default function DataItem({ item, index }) {
     )
 
     return (
-        <div>
-            <Card className={classes.root} style={{ borderLeftColor: color }}>
+        <div onDrop={handleDrop} onDragOver={(e) => e.preventDefault()} >
+            <Card  draggable={true} onDragStart={(e) => handleDragStart(e)}
+                     className={classes.root} style={{ borderLeftColor: color }} >
                 <CardHeader
                     className={classes.header}
                     action={
